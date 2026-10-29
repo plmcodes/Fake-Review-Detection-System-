@@ -1,0 +1,4 @@
+# CPU-only PyTorch for laptops without a GPU (smaller download than the default CUDA build).
+# Install this BEFORE requirements.txt. Not needed on Colab/Kaggle (torch is preinstalled there).
+--index-url https://download.pytorch.org/whl/cpu
+torch==2.15.0

@@ -1,0 +1,66 @@
+# Default configuration shared by every model and script.
+# Model-specific settings live in configs/models/<model>.yaml and are merged on top of this file.
+# Any value can be overridden from the command line, e.g.  --set train.lr=0.0005
+
+paths:
+  raw: data/raw
+  processed: data/processed
+  checkpoints: checkpoints
+  results: results
+  runs_csv: results/runs.csv
+  tables: results/tables
+  plots: results/plots
+  predictions: results/predictions
+
+# `seed` controls model initialisation / shuffling. It changes between the 3 repeated runs.
+# `split_seed` controls the train/val/test split and NEVER changes, so every model and every
+# seed sees exactly the same test reviews.
+seed: 42
+seeds: [42, 43, 44]
+split_seed: 42
+
+# Stratified subsample size for quick CPU smoke tests (null = use the full dataset).
+sample: null
+
+split:
+  train: 0.70
+  val: 0.15
+  test: 0.15
+
+preprocess:
+  emoji: text          # "text" -> ":smiling_face:"-style words, "remove" -> drop emojis
+  lemmatize: true      # only used for the TF-IDF representation
+  remove_stopwords: true
+
+features:
+  tfidf:
+    max_features: 10000
+    ngram_min: 1
+    ngram_max: 2
+    min_df: 2
+    sublinear_tf: true
+  sbert:
+    model_name: sentence-transformers/all-MiniLM-L6-v2
+    batch_size: 64
+    max_seq_length: 256
+  glove:
+    path: data/raw/glove/glove.6B.100d.txt
+    dim: 100
+    max_vocab: 20000
+    min_freq: 2
+    max_len: 200
+
+train:
+  device: auto              # auto | cpu | cuda
+  epochs: 30
+  batch_size: 128
+  lr: 0.001
+  weight_decay: 0.0
+  patience: 5               # early stopping patience (epochs without val improvement)
+  imbalance: class_weight   # none | class_weight | focal   (never oversample val/test)
+  focal_gamma: 2.0
+  num_workers: 0
+
+eval:
+  # Datasets to score a trained model on, in addition to its own test split (cross-domain).
+  cross_domain: [ott, yelpchi]
