@@ -1,0 +1,14 @@
+,fake,genuine
+n_chars,790.5975,819.4925
+n_words,147.2388,151.64
+avg_word_len,4.3035,4.3027
+n_sentences,9.3875,11.855
+words_per_sentence,16.0877,14.6721
+exclaim_rate,0.0082,0.0071
+question_rate,0.0004,0.0011
+punct_ratio,0.0228,0.0291
+first_person_rate,0.0662,0.0494
+caps_ratio,0.032,0.0312
+allcaps_word_rate,0.0036,0.0048
+type_token_ratio,0.6635,0.6773
+digit_ratio,0.0014,0.0044

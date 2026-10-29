@@ -1,0 +1,141 @@
+{
+  "dataset": "ott",
+  "n_reviews": 1600,
+  "class_counts": {
+    "fake": 800,
+    "genuine": 800
+  },
+  "words_median": {
+    "fake": 137.0,
+    "genuine": 145.0
+  },
+  "words_mean": {
+    "fake": 161.8,
+    "genuine": 169.2
+  },
+  "words_max": 838,
+  "share_over_64_words": 0.929,
+  "share_over_200_words": 0.255,
+  "categories": {
+    "fake": {
+      "hotel_negative": 400,
+      "hotel_positive": 400
+    },
+    "genuine": {
+      "hotel_negative": 400,
+      "hotel_positive": 400
+    }
+  },
+  "top_unigrams_genuine": [
+    "room",
+    "hotel",
+    "not",
+    "stay",
+    "great",
+    "chicago",
+    "night",
+    "would",
+    "staff",
+    "service"
+  ],
+  "top_unigrams_fake": [
+    "hotel",
+    "room",
+    "chicago",
+    "not",
+    "stay",
+    "would",
+    "service",
+    "staff",
+    "one",
+    "time"
+  ],
+  "top_bigrams_genuine": [
+    "front desk",
+    "room service",
+    "would not",
+    "michigan ave",
+    "great location",
+    "walking distance",
+    "staff friendly",
+    "hotel room",
+    "stay hotel",
+    "hotel not"
+  ],
+  "top_bigrams_fake": [
+    "front desk",
+    "room service",
+    "hotel chicago",
+    "chicago hotel",
+    "downtown chicago",
+    "stay hotel",
+    "recommend hotel",
+    "hard rock",
+    "would not",
+    "customer service"
+  ],
+  "distinctive_fake": [
+    "luxury",
+    "cigarette",
+    "television",
+    "relax",
+    "indoor",
+    "originally",
+    "chicago's",
+    "pet",
+    "vacation",
+    "accommodation"
+  ],
+  "distinctive_genuine": [
+    "priceline",
+    "sofa",
+    "security",
+    "fridge",
+    "9",
+    "older",
+    "sunday",
+    "fan",
+    "11",
+    "block"
+  ],
+  "style_means": {
+    "fake": {
+      "n_chars": 790.5975,
+      "n_words": 147.2388,
+      "avg_word_len": 4.3035,
+      "n_sentences": 9.3875,
+      "words_per_sentence": 16.0877,
+      "exclaim_rate": 0.0082,
+      "question_rate": 0.0004,
+      "punct_ratio": 0.0228,
+      "first_person_rate": 0.0662,
+      "caps_ratio": 0.032,
+      "allcaps_word_rate": 0.0036,
+      "type_token_ratio": 0.6635,
+      "digit_ratio": 0.0014
+    },
+    "genuine": {
+      "n_chars": 819.4925,
+      "n_words": 151.64,
+      "avg_word_len": 4.3027,
+      "n_sentences": 11.855,
+      "words_per_sentence": 14.6721,
+      "exclaim_rate": 0.0071,
+      "question_rate": 0.0011,
+      "punct_ratio": 0.0291,
+      "first_person_rate": 0.0494,
+      "caps_ratio": 0.0312,
+      "allcaps_word_rate": 0.0048,
+      "type_token_ratio": 0.6773,
+      "digit_ratio": 0.0044
+    }
+  },
+  "duplicate_text_rows": 8,
+  "duplicate_text_rows_by_class": {
+    "genuine": 8
+  },
+  "share_ending_with_punctuation": {
+    "fake": 0.97,
+    "genuine": 0.928
+  }
+}
