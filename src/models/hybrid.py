@@ -135,7 +135,10 @@ class HybridRunner(Runner):
         return names
 
     # ---------------------------------------------------------------- training
-    def _train_ae(self, data, train_positions=None) -> DenseAERunner:
+    def _train_ae(self, data, train_positions=None, fold: int | None = None) -> DenseAERunner:
+        # Seed every autoencoder explicitly, so its weights depend only on (settings, seed, fold),
+        # not on what ran before it. This is what makes the AE cache below exact.
+        torch.manual_seed(self.seed * 10 + (0 if fold is None else fold + 1))
         ae = DenseAERunner(self._ae_cfg(), self.seed)
         if train_positions is not None:   # fold model: pretend only these genuine rows exist in train
             view = copy.copy(data)
@@ -145,15 +148,58 @@ class HybridRunner(Runner):
             ae.fit(data)
         return ae
 
+    def _ae_cache_dir(self, data) -> Path | None:
+        """Folder for this run's autoencoder part, shared by every hybrid run with the same AE.
+
+        The inner AE (and its out-of-fold errors) depends only on the AE settings, the seed and the
+        data - not on the classifier, the regime or the feature switches. The hybrid, its XGBoost and
+        joint variants, the ablation runs and the Optuna trials can therefore reuse one trained AE
+        instead of retraining an identical one. Set `model.ae_cache: false` to always retrain;
+        delete checkpoints/_ae_cache/ after changing the AE code.
+        """
+        if not self.mcfg.get("ae_cache", True):
+            return None
+        import hashlib
+        import json
+
+        from ..config import resolve_path
+
+        ae_cfg = self._ae_cfg()
+        key = {"version": 1, "ae": ae_cfg["model"], "ae_train": ae_cfg["train"], "sbert": self.cfg["features"]["sbert"],
+               "dataset": data.name, "n_rows": len(data.df), "split_seed": self.cfg["split_seed"], "seed": self.seed}
+        digest = hashlib.sha1(json.dumps(key, sort_keys=True, default=str).encode()).hexdigest()[:12]
+        return resolve_path(self.cfg["paths"]["checkpoints"]) / "_ae_cache" / f"{data.name}_seed{self.seed}_{digest}"
+
+    def _main_ae(self, data) -> DenseAERunner:
+        cache = self._ae_cache_dir(data)
+        if cache is not None and (cache / "main" / "model.pt").exists():
+            log.info("Reusing cached autoencoder %s", cache.name)
+            return DenseAERunner.load(cache / "main", self._ae_cfg())
+        ae = self._train_ae(data)
+        if cache is not None:
+            (cache / "main").mkdir(parents=True, exist_ok=True)
+            ae.save(cache / "main")
+        return ae
+
     def _oof_errors(self, data, tr_g: np.ndarray) -> np.ndarray:
         """Out-of-fold reconstruction errors for genuine training reviews (see module docstring)."""
         k = int(self.mcfg.get("oof_folds", 5))
+        cache = self._ae_cache_dir(data)
+        cache_file = cache / f"oof_k{k}.npz" if cache is not None else None
+        if cache_file is not None and cache_file.exists():
+            saved = np.load(cache_file)
+            if np.array_equal(saved["positions"], tr_g):
+                log.info("Reusing cached out-of-fold errors %s/%s", cache.name, cache_file.name)
+                return saved["errors"]
         emb = data.sbert()
         out = np.zeros(len(tr_g), dtype=np.float32)
         for fold, (fit_part, held_out) in enumerate(KFold(k, shuffle=True, random_state=self.seed).split(tr_g)):
             log.info("Out-of-fold AE %d/%d", fold + 1, k)
-            fold_ae = self._train_ae(data, train_positions=tr_g[fit_part])
+            fold_ae = self._train_ae(data, train_positions=tr_g[fit_part], fold=fold)
             out[held_out] = self._ae_parts(emb[tr_g[held_out]], fold_ae)[1]
+        if cache_file is not None:
+            cache.mkdir(parents=True, exist_ok=True)
+            np.savez(cache_file, positions=tr_g, errors=out)
         return out
 
     def fit(self, data):
@@ -161,7 +207,7 @@ class HybridRunner(Runner):
         log.info("Hybrid: classifier=%s regime=%s features: latent=%s err=%s style=%s behaviour=%s",
                  self.mcfg["classifier"], self.mcfg["regime"], self.use_latent, self.use_err,
                  self.use_style, self.use_beh)
-        self.ae = self._train_ae(data)                       # Model A, genuine-only pretraining
+        self.ae = self._main_ae(data)                        # Model A, genuine-only pretraining (cached)
         if self.mcfg["regime"] == "joint":
             self._fit_joint(data)
         else:
