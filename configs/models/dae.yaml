@@ -1,0 +1,14 @@
+# Model C1 - denoising autoencoder (Gaussian noise on the standardised input embedding)
+model:
+  name: dae
+  runner: dense_ae
+  variant: dae
+  latent_dim: 32
+  hidden: [256, 64]
+  dropout: 0.2
+  standardize: true
+  noise: gaussian        # gaussian | mask
+  noise_std: 0.3
+  mask_prob: 0.1
+  score: recon
+train: {epochs: 200, batch_size: 128, lr: 0.001, patience: 10}

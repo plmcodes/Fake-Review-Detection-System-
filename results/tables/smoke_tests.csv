@@ -1,0 +1,13 @@
+Model,sample,F1,ROC-AUC,PR-AUC
+Logistic Regression (TF-IDF),500,0.727,0.804,0.816
+Linear SVM (TF-IDF),500,0.753,0.814,0.822
+Multinomial NB (TF-IDF),500,0.821,0.861,0.840
+1D-CNN (GloVe),500,0.765,0.914,0.901
+BiLSTM (GloVe),500,0.822,0.929,0.926
+A: Dense AE (SBERT),500,0.649,0.339,0.437
+B: LSTM seq2seq AE (GloVe),500,0.688,0.612,0.593
+C1: Denoising AE (SBERT),500,0.649,0.336,0.436
+C2: VAE (SBERT),500,0.649,0.329,0.433
+D: Hybrid MLP (frozen) [proposed],500,0.628,0.608,0.578
+D: Hybrid XGBoost (frozen),500,0.706,0.863,0.866
+D: Hybrid MLP (joint fine-tune),500,0.584,0.541,0.515

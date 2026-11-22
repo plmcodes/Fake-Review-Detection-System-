@@ -1,0 +1,11 @@
+# Model A - dense autoencoder on SBERT embeddings, trained on GENUINE reviews only.
+model:
+  name: ae_dense
+  runner: dense_ae
+  variant: ae
+  latent_dim: 32
+  hidden: [256, 64]
+  dropout: 0.2
+  standardize: true      # z-score SBERT dims (scaler fit on genuine train rows)
+  score: recon
+train: {epochs: 200, batch_size: 128, lr: 0.001, patience: 10}

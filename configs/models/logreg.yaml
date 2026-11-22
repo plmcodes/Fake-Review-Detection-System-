@@ -1,0 +1,2 @@
+# Logistic Regression on TF-IDF (classical baseline)
+model: {name: logreg, runner: classical, kind: logreg, C: 1.0}

@@ -1,0 +1,3 @@
+# BiLSTM over GloVe 100d (deep-learning baseline)
+model: {name: bilstm, runner: sequence, arch: bilstm, hidden: 128, num_layers: 1, dropout: 0.3, freeze_emb: false}
+train: {epochs: 15, batch_size: 64, lr: 0.001, patience: 3}

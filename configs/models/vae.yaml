@@ -1,0 +1,12 @@
+# Model C2 - variational autoencoder. loss = reconstruction + beta * KL
+model:
+  name: vae
+  runner: dense_ae
+  variant: vae
+  latent_dim: 32
+  hidden: [256, 64]
+  dropout: 0.2
+  standardize: true
+  beta: 0.1
+  score: recon           # recon | elbo
+train: {epochs: 200, batch_size: 128, lr: 0.001, patience: 10}

@@ -1,0 +1,2 @@
+# Linear SVM on TF-IDF (classical baseline). Score = signed margin, threshold 0.
+model: {name: svm, runner: classical, kind: svm, C: 0.5}

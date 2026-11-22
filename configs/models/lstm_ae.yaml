@@ -1,0 +1,11 @@
+# Model B - LSTM seq2seq autoencoder over GloVe tokens, trained on GENUINE reviews only.
+model:
+  name: lstm_ae
+  runner: lstm_ae
+  max_len: 64            # words kept per review (output tensor is batch x len x vocab)
+  max_vocab: 10000
+  hidden: 256
+  latent_dim: 64
+  dropout: 0.2
+  freeze_emb: true
+train: {epochs: 20, batch_size: 64, lr: 0.001, patience: 3}

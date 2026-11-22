@@ -1,0 +1,12 @@
+# Model D with XGBoost instead of the MLP (comparison)
+model:
+  name: hybrid_xgb
+  runner: hybrid
+  classifier: xgb
+  regime: frozen
+  features: {latent: true, recon_error: true, style: true, behaviour: auto}
+  oof_folds: 5
+  ae: {latent_dim: 32, hidden: [256, 64], dropout: 0.2, standardize: true}
+  ae_train: {epochs: 200, batch_size: 128, lr: 0.001, patience: 10}
+  mlp: {hidden: [64, 32], dropout: 0.3}
+  xgb: {n_estimators: 600, max_depth: 4, learning_rate: 0.05, subsample: 0.8, colsample_bytree: 0.8, early_stopping_rounds: 40}

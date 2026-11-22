@@ -1,0 +1,2 @@
+# Multinomial Naive Bayes on TF-IDF (classical baseline)
+model: {name: nb, runner: classical, kind: nb, alpha: 0.1}

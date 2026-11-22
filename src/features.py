@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import string
 from collections import Counter
 from dataclasses import dataclass, field
@@ -198,9 +199,36 @@ def sbert_embeddings(bundle: DataBundle, cfg: dict) -> np.ndarray:
         if all(r in lookup for r in ids):
             return z["emb"][[lookup[r] for r in ids]]
     log.info("Encoding %d texts with %s (cached afterwards)...", len(ids), slug)
-    emb = encode_texts(bundle.df["text"].tolist(), cfg, show_progress=len(ids) > 2000)
+    emb = _encode_in_chunks(bundle.df["text"].tolist(), cfg, path.with_suffix(".parts") / digest[:12])
     np.savez(path, emb=emb, digest=digest, ids=json.dumps(ids))
+    shutil.rmtree(path.with_suffix(".parts"), ignore_errors=True)
     return emb
+
+
+SBERT_CHUNK = 2048
+
+
+def _encode_in_chunks(texts: list[str], cfg: dict, parts_dir: Path) -> np.ndarray:
+    """Encode in chunks of SBERT_CHUNK texts, saving each chunk to disk.
+
+    Encoding 40k reviews takes about an hour on a laptop CPU. If the process is stopped,
+    the next call reloads the finished chunks and only encodes the rest. The parts folder
+    name contains the data digest, so chunks from different data are never mixed.
+    """
+    parts_dir.mkdir(parents=True, exist_ok=True)
+    chunks = []
+    n_chunks = (len(texts) + SBERT_CHUNK - 1) // SBERT_CHUNK
+    for k in range(n_chunks):
+        part = parts_dir / f"part_{k:04d}.npy"
+        if part.exists():
+            chunks.append(np.load(part))
+            continue
+        start = k * SBERT_CHUNK
+        chunk = encode_texts(texts[start:start + SBERT_CHUNK], cfg)
+        np.save(part, chunk)
+        chunks.append(chunk)
+        log.info("SBERT chunk %d/%d saved", k + 1, n_chunks)
+    return np.concatenate(chunks)
 
 
 # ============================================================================ TF-IDF
