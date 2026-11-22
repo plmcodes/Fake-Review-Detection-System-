@@ -1,0 +1,7 @@
+# Optuna best params for ae_dense on salminen (25 trials, objective = validation PR-AUC = 0.4475)
+model:
+  latent_dim: 16
+  dropout: 0.03954317277055702
+train:
+  lr: 0.0005475503587091659
+  batch_size: 64
