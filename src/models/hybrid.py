@@ -164,9 +164,12 @@ class HybridRunner(Runner):
 
         from ..config import resolve_path
 
-        ae_cfg = self._ae_cfg()
-        key = {"version": 1, "ae": ae_cfg["model"], "ae_train": ae_cfg["train"], "sbert": self.cfg["features"]["sbert"],
-               "dataset": data.name, "n_rows": len(data.df), "split_seed": self.cfg["split_seed"], "seed": self.seed}
+        # Only what the inner AE actually uses: its architecture (model.ae), its training settings
+        # (train merged with model.ae_train), the SBERT input and the data. NOT the classifier settings,
+        # which Optuna and the ablation change.
+        key = {"version": 2, "ae": self.mcfg["ae"], "ae_train": self._ae_cfg()["train"],
+               "sbert": self.cfg["features"]["sbert"], "dataset": data.name, "n_rows": len(data.df),
+               "split_seed": self.cfg["split_seed"], "seed": self.seed}
         digest = hashlib.sha1(json.dumps(key, sort_keys=True, default=str).encode()).hexdigest()[:12]
         return resolve_path(self.cfg["paths"]["checkpoints"]) / "_ae_cache" / f"{data.name}_seed{self.seed}_{digest}"
 
