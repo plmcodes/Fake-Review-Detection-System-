@@ -37,13 +37,29 @@ EXAMPLES = {
 }
 
 
+DEMO = ROOT / "app" / "model"   # bundled copies made by `python -m src.export_demo` (committed to git)
+
+
 def find_checkpoint(prefix: str) -> Path | None:
-    """Prefer the full-data seed-42 run; fall back to any run of that model (e.g. a smoke test)."""
+    """Prefer the full-data seed-42 run in checkpoints/; then the bundled copy in app/model/ (fresh
+    clone); finally any run of that model (e.g. a smoke test)."""
     preferred = CKPT / f"{prefix}__salminen__seed42"
     if (preferred / "meta.json").exists():
         return preferred
+    if (DEMO / prefix / "meta.json").exists():
+        return DEMO / prefix
     found = sorted(p.parent for p in CKPT.glob(f"{prefix}__salminen*/meta.json"))
     return found[0] if found else None
+
+
+def genuine_val_errors(ameta: dict):
+    """Sorted Model-A errors of genuine validation reviews (for the percentile in the app)."""
+    preds = resolve_path(f"results/predictions/{ameta['run_id']}/salminen_val.csv")
+    if preds.exists():
+        v = pd.read_csv(preds)
+        return np.sort(v.loc[v["label"] == 0, "score"].to_numpy())
+    bundled = DEMO / "ae_val_genuine_errors.npy"
+    return np.load(bundled) if bundled.exists() else None
 
 
 @st.cache_resource(show_spinner="Loading models (first time only)...")
@@ -57,12 +73,29 @@ def load_models():
     ae, ameta, val_genuine = None, None, None
     if ae_dir is not None:
         ae, ameta = load_runner(ae_dir)
-        preds = resolve_path(f"results/predictions/{ameta['run_id']}/salminen_val.csv")
-        if preds.exists():
-            v = pd.read_csv(preds)
-            val_genuine = np.sort(v.loc[v["label"] == 0, "score"].to_numpy())
+        val_genuine = genuine_val_errors(ameta)
     hybrid.score_texts(["warm-up"])   # loads SBERT now, so the first real click is fast
-    return {"hybrid": hybrid, "hmeta": hmeta, "ae": ae, "ameta": ameta, "val_genuine": val_genuine}
+    return {"hybrid": hybrid, "hmeta": hmeta, "ae": ae, "ameta": ameta, "val_genuine": val_genuine,
+            "test_metrics": logged_test_metrics()}
+
+
+def logged_test_metrics() -> dict:
+    """Test metrics of the loaded runs, from results/runs.csv or the bundled app/model/demo_info.json."""
+    import json
+
+    runs_csv = resolve_path("results/runs.csv")
+    out = {}
+    if runs_csv.exists():
+        runs = pd.read_csv(runs_csv)
+        for name in ("hybrid", "ae_dense"):
+            row = runs[(runs["run_id"] == f"{name}__salminen__seed42") & (runs["eval_dataset"] == "salminen")
+                       & (runs["split"] == "test")]
+            if len(row):
+                out[name] = {"test_roc_auc": float(row.iloc[-1]["roc_auc"]), "test_f1": float(row.iloc[-1]["f1"])}
+    info = DEMO / "demo_info.json"
+    if not out and info.exists():
+        out = json.loads(info.read_text())
+    return out
 
 
 def ae_scores(models, texts):
@@ -102,14 +135,18 @@ st.caption("Hybrid model (Model D): SBERT → autoencoder latent + reconstructio
 
 models = load_models()
 if models is None:
-    st.error("No trained hybrid checkpoint found in checkpoints/. Train one first:\n\n"
-             "`python -m src.train --model hybrid --dataset salminen`")
+    st.error("No trained hybrid model found in checkpoints/ or app/model/. Train one first:\n\n"
+             "`python -m src.train --model hybrid --dataset salminen --tuned` then `python -m src.export_demo`")
     st.stop()
 
 with st.sidebar:
     st.subheader("Loaded models")
     st.write(f"Hybrid: `{models['hmeta']['run_id']}`")
     st.write(f"Autoencoder: `{models['ameta']['run_id'] if models['ameta'] else 'not found'}`")
+    for name, label in (("hybrid", "Hybrid"), ("ae_dense", "Autoencoder")):
+        m = models["test_metrics"].get(name)
+        if m:
+            st.caption(f"{label} on the Salminen test split: F1 {m['test_f1']:.3f}, ROC-AUC {m['test_roc_auc']:.3f}")
     if models["hmeta"].get("sample"):
         st.warning("These are smoke-test models trained on a tiny sample - predictions are not meaningful.")
     lime_samples = st.slider("LIME perturbation samples", 100, 1000, 300, 100,
@@ -138,6 +175,12 @@ with tab1:
                 pct = 100 * np.searchsorted(models["val_genuine"], err) / len(models["val_genuine"])
                 st.caption(f"Reconstruction error is higher than {pct:.0f}% of genuine validation reviews. "
                            f"Above the threshold ({thr:.3f}) the unsupervised Model A alone would flag it as fake.")
+            ae_m = models["test_metrics"].get("ae_dense")
+            if ae_m and ae_m["test_roc_auc"] < 0.5:
+                st.info(f"On this dataset the autoencoder alone is **not** a reliable detector (test ROC-AUC "
+                        f"{ae_m['test_roc_auc']:.2f}, below chance): GPT-2 fakes are short and generic, so it rebuilds "
+                        "them *better* than genuine reviews, and its validation threshold ends up flagging almost "
+                        "everything. The verdict above comes from the hybrid model. See report Chapter 6.")
             st.progress(min(err / (2 * thr), 1.0), text="reconstruction error (threshold at the middle)")
         with st.spinner("Computing LIME explanation..."):
             from src.explain import explain_text

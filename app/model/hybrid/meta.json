@@ -1,0 +1,130 @@
+{
+  "run_id": "hybrid__salminen__seed42",
+  "model": "hybrid",
+  "family": "hybrid",
+  "dataset": "salminen",
+  "sample": null,
+  "seed": 42,
+  "tag": "",
+  "threshold": 0.5,
+  "config_hash": "072f2bffeb",
+  "needs_labels": true,
+  "train_time_s": 37.23091620000196,
+  "cross_domain": [
+    "ott"
+  ],
+  "notes": "genuine-train recon errors out-of-fold (k=5); Optuna-tuned",
+  "config": {
+    "paths": {
+      "raw": "data/raw",
+      "processed": "data/processed",
+      "checkpoints": "checkpoints",
+      "results": "results",
+      "runs_csv": "results/runs.csv",
+      "tables": "results/tables",
+      "plots": "results/plots",
+      "predictions": "results/predictions"
+    },
+    "seed": 42,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "split_seed": 42,
+    "sample": null,
+    "split": {
+      "train": 0.7,
+      "val": 0.15,
+      "test": 0.15
+    },
+    "preprocess": {
+      "emoji": "text",
+      "lemmatize": true,
+      "remove_stopwords": true
+    },
+    "features": {
+      "tfidf": {
+        "max_features": 10000,
+        "ngram_min": 1,
+        "ngram_max": 2,
+        "min_df": 2,
+        "sublinear_tf": true
+      },
+      "sbert": {
+        "model_name": "sentence-transformers/all-MiniLM-L6-v2",
+        "batch_size": 64,
+        "max_seq_length": 256
+      },
+      "glove": {
+        "path": "data/raw/glove/glove.6B.100d.txt",
+        "dim": 100,
+        "max_vocab": 20000,
+        "min_freq": 2,
+        "max_len": 200
+      }
+    },
+    "train": {
+      "device": "auto",
+      "epochs": 200,
+      "batch_size": 64,
+      "lr": 0.001172067017209326,
+      "weight_decay": 0.0,
+      "patience": 10,
+      "imbalance": "class_weight",
+      "focal_gamma": 2.0,
+      "num_workers": 0
+    },
+    "eval": {
+      "cross_domain": [
+        "ott",
+        "yelpchi"
+      ]
+    },
+    "model": {
+      "name": "hybrid",
+      "runner": "hybrid",
+      "classifier": "mlp",
+      "regime": "frozen",
+      "features": {
+        "latent": true,
+        "recon_error": true,
+        "style": true,
+        "behaviour": "auto"
+      },
+      "oof_folds": 5,
+      "ae": {
+        "latent_dim": 16,
+        "hidden": [
+          256,
+          64
+        ],
+        "dropout": 0.2,
+        "standardize": true
+      },
+      "ae_train": {
+        "epochs": 200,
+        "batch_size": 128,
+        "lr": 0.001,
+        "patience": 10
+      },
+      "mlp": {
+        "hidden": [
+          64,
+          32
+        ],
+        "dropout": 0.20357458057921213
+      },
+      "xgb": {
+        "n_estimators": 600,
+        "max_depth": 4,
+        "learning_rate": 0.05,
+        "subsample": 0.8,
+        "colsample_bytree": 0.8,
+        "early_stopping_rounds": 40
+      },
+      "lambda_recon": 0.5,
+      "joint_lr": 0.0003
+    }
+  }
+}

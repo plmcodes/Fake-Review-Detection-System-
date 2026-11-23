@@ -1,0 +1,14 @@
+{
+  "hybrid": {
+    "run_id": "hybrid__salminen__seed42",
+    "test_f1": 0.857189,
+    "test_roc_auc": 0.936717,
+    "test_pr_auc": 0.937525
+  },
+  "ae_dense": {
+    "run_id": "ae_dense__salminen__seed42",
+    "test_f1": 0.666593,
+    "test_roc_auc": 0.380855,
+    "test_pr_auc": 0.448242
+  }
+}
