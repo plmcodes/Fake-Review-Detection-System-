@@ -1,0 +1,9 @@
+Model,Variant,Precision,Recall,F1,ROC-AUC,PR-AUC,Seeds
+D: Hybrid MLP (frozen) [proposed],full (latent + error + style),0.842 ± 0.005,0.862 ± 0.007,0.852 ± 0.004,0.934 ± 0.002,0.935 ± 0.003,3
+D: Hybrid MLP (frozen) [proposed],no_latent,0.837 ± 0.004,0.876 ± 0.003,0.856 ± 0.001,0.936 ± 0.000,0.936 ± 0.000,3
+D: Hybrid MLP (frozen) [proposed],no_oof,0.821 ± 0.006,0.868 ± 0.015,0.844 ± 0.009,0.928 ± 0.006,0.928 ± 0.006,3
+D: Hybrid MLP (frozen) [proposed],no_recon,0.841 ± 0.007,0.869 ± 0.007,0.855 ± 0.005,0.936 ± 0.002,0.936 ± 0.001,3
+D: Hybrid MLP (frozen) [proposed],no_style,0.677 ± 0.007,0.695 ± 0.025,0.686 ± 0.011,0.753 ± 0.006,0.751 ± 0.004,3
+D: Hybrid MLP (frozen) [proposed],style_only,0.837 ± 0.005,0.858 ± 0.004,0.847 ± 0.001,0.931 ± 0.001,0.931 ± 0.001,3
+D: Hybrid XGBoost (frozen),full (latent + error + style),0.856 ± 0.001,0.871 ± 0.006,0.863 ± 0.003,0.944 ± 0.001,0.944 ± 0.001,3
+D: Hybrid MLP (joint fine-tune),full (latent + error + style),0.875 ± 0.006,0.865 ± 0.008,0.870 ± 0.004,0.948 ± 0.001,0.949 ± 0.001,3

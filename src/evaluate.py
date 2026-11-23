@@ -181,7 +181,8 @@ def build_tables(cfg: dict) -> None:
     rows = []
     for model, g in cross.groupby("model"):
         src = g[g["eval_dataset"] == MAIN_DATASET]
-        for target in sorted(set(g["eval_dataset"]) - {MAIN_DATASET}):
+        # modern_fakes is all-fake (only recall means anything there) and has its own table
+        for target in sorted(set(g["eval_dataset"]) - {MAIN_DATASET, "modern_fakes"}):
             tgt = g[g["eval_dataset"] == target]
             row = {"model": model, "Model": PRETTY.get(model, model), "Target": target}
             for metric, label in [("f1", "F1"), ("roc_auc", "ROC-AUC"), ("pr_auc", "PR-AUC")]:

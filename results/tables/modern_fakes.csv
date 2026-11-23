@@ -1,0 +1,19 @@
+Model,Variant,GPT-2 fakes recall (Salminen test),Genuine flagged as fake (Salminen test),Modern-LLM fakes detection rate
+Logistic Regression (TF-IDF),-,0.897,0.097,0.015
+Linear SVM (TF-IDF),-,0.907,0.089,0.015
+Multinomial NB (TF-IDF),-,0.868,0.110,0.035
+1D-CNN (GloVe),-,0.956,0.045,0.015
+BiLSTM (GloVe),-,0.953,0.043,0.015
+"DistilBERT (CPU: 2k-train subset, len 128)",-,0.977,0.116,0.075
+A: Dense AE (SBERT),-,1.000,1.000,1.000
+B: LSTM seq2seq AE (GloVe),-,1.000,1.000,1.000
+C1: Denoising AE (SBERT),-,1.000,1.000,1.000
+C2: VAE (SBERT),-,1.000,1.000,1.000
+D: Hybrid MLP (frozen) [proposed],-,0.869,0.159,0.015
+D: Hybrid MLP (frozen) [proposed],no_latent,0.873,0.164,0.000
+D: Hybrid MLP (frozen) [proposed],no_oof,0.885,0.189,0.015
+D: Hybrid MLP (frozen) [proposed],no_recon,0.870,0.155,0.015
+D: Hybrid MLP (frozen) [proposed],no_style,0.718,0.353,0.390
+D: Hybrid MLP (frozen) [proposed],style_only,0.859,0.165,0.000
+D: Hybrid XGBoost (frozen),-,0.868,0.145,0.000
+D: Hybrid MLP (joint fine-tune),-,0.866,0.117,0.020

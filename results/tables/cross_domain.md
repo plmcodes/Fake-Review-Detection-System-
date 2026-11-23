@@ -1,0 +1,19 @@
+## Cross-domain: train on Salminen (Amazon) → test elsewhere
+
+Drop = in-domain − cross-domain (positive = worse). The threshold is frozen from the Salminen validation split - no target-domain labels are used.
+
+| Model | Target | F1 in-domain | F1 ott | F1 drop | ROC-AUC in-domain | ROC-AUC ott | ROC-AUC drop | PR-AUC in-domain | PR-AUC ott | PR-AUC drop |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Logistic Regression (TF-IDF) | ott | 0.900 | 0.000 ± 0.000 | +0.900 | 0.967 | 0.493 ± 0.000 | +0.474 | 0.968 | 0.499 ± 0.000 | +0.469 |
+| Linear SVM (TF-IDF) | ott | 0.909 | 0.000 ± 0.000 | +0.909 | 0.971 | 0.497 ± 0.000 | +0.474 | 0.971 | 0.498 ± 0.000 | +0.473 |
+| Multinomial NB (TF-IDF) | ott | 0.878 | 0.000 ± 0.000 | +0.878 | 0.955 | 0.508 ± 0.000 | +0.448 | 0.960 | 0.509 ± 0.000 | +0.452 |
+| 1D-CNN (GloVe) | ott | 0.953 | 0.005 ± 0.004 | +0.948 | 0.991 | 0.529 ± 0.009 | +0.462 | 0.992 | 0.532 ± 0.007 | +0.459 |
+| BiLSTM (GloVe) | ott | 0.955 | 0.027 | +0.928 | 0.992 | 0.487 | +0.504 | 0.992 | 0.511 | +0.482 |
+| DistilBERT (CPU: 2k-train subset, len 128) | ott | 0.933 | 0.089 | +0.844 | 0.985 | 0.613 | +0.372 | 0.984 | 0.600 | +0.384 |
+| A: Dense AE (SBERT) | ott | 0.667 | 0.667 ± 0.000 | -0.000 | 0.379 | 0.549 ± 0.003 | -0.170 | 0.447 | 0.528 ± 0.006 | -0.081 |
+| B: LSTM seq2seq AE (GloVe) | ott | 0.667 | 0.667 | -0.000 | 0.107 | 0.454 | -0.348 | 0.322 | 0.462 | -0.140 |
+| C1: Denoising AE (SBERT) | ott | 0.667 | 0.667 ± 0.000 | -0.000 | 0.371 | 0.544 ± 0.006 | -0.173 | 0.440 | 0.523 ± 0.001 | -0.082 |
+| C2: VAE (SBERT) | ott | 0.667 | 0.667 ± 0.000 | -0.000 | 0.372 | 0.547 ± 0.023 | -0.174 | 0.442 | 0.528 ± 0.020 | -0.086 |
+| D: Hybrid MLP (frozen) [proposed] | ott | 0.852 | 0.081 ± 0.007 | +0.771 | 0.934 | 0.550 ± 0.010 | +0.384 | 0.935 | 0.552 ± 0.008 | +0.383 |
+| D: Hybrid XGBoost (frozen) | ott | 0.863 | 0.066 ± 0.017 | +0.797 | 0.944 | 0.579 ± 0.007 | +0.365 | 0.944 | 0.583 ± 0.003 | +0.361 |
+| D: Hybrid MLP (joint fine-tune) | ott | 0.870 | 0.226 ± 0.057 | +0.644 | 0.948 | 0.599 ± 0.003 | +0.349 | 0.949 | 0.602 ± 0.001 | +0.347 |

@@ -1,0 +1,31 @@
+feature,mean_abs_shap,group
+type_token_ratio,0.23098883934379855,style
+n_chars,0.13119166248648,style
+n_words,0.06808456911270468,style
+avg_word_len,0.052814845017277644,style
+n_sentences,0.04536555108154808,style
+caps_ratio,0.03489669026889752,style
+words_per_sentence,0.03301482662054617,style
+log_recon_error,0.023652903526388817,reconstruction error
+exclaim_rate,0.02241580307683009,style
+allcaps_word_rate,0.021677836559625033,style
+punct_ratio,0.02040241794119527,style
+z_15,0.017664400910166248,latent z (AE encoder)
+z_4,0.014795229048187064,latent z (AE encoder)
+z_6,0.013608017512804986,latent z (AE encoder)
+z_3,0.012857030076963278,latent z (AE encoder)
+z_0,0.012076976768537357,latent z (AE encoder)
+z_10,0.011817420881437214,latent z (AE encoder)
+z_14,0.011752039334439654,latent z (AE encoder)
+digit_ratio,0.01169521079426607,style
+z_9,0.01131625833065402,latent z (AE encoder)
+first_person_rate,0.01064793460177302,style
+z_11,0.010230126683239794,latent z (AE encoder)
+z_1,0.010058184530609934,latent z (AE encoder)
+z_13,0.008261709038810667,latent z (AE encoder)
+z_12,0.007962442270257362,latent z (AE encoder)
+z_7,0.006921627185100436,latent z (AE encoder)
+z_5,0.006744418391487434,latent z (AE encoder)
+z_2,0.006677793466061052,latent z (AE encoder)
+z_8,0.005135087645680359,latent z (AE encoder)
+question_rate,0.0030962423786334253,style

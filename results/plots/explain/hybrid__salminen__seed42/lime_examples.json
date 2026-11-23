@@ -1,0 +1,198 @@
+[
+  {
+    "name": "lime_fake_0",
+    "review_id": "salminen_34646",
+    "true_label": 1,
+    "p_fake": 0.8838084936141968,
+    "text": "My nieces love these but the ones I bought were a little smaller than I expected. I'm not sure why. The plastic parts are also not as good as the cardboard",
+    "weights": [
+      [
+        "I",
+        0.33927895891602217
+      ],
+      [
+        "My",
+        0.10695515683599323
+      ],
+      [
+        "The",
+        0.10486524546748557
+      ],
+      [
+        "expected",
+        -0.0901456449031487
+      ],
+      [
+        "as",
+        0.08869116945247921
+      ],
+      [
+        "the",
+        0.08697656892251102
+      ],
+      [
+        "plastic",
+        -0.06501080028235981
+      ],
+      [
+        "not",
+        0.0577811239135933
+      ],
+      [
+        "these",
+        -0.044245854043765756
+      ],
+      [
+        "m",
+        0.029527587121113738
+      ]
+    ]
+  },
+  {
+    "name": "lime_fake_1",
+    "review_id": "salminen_26431",
+    "true_label": 1,
+    "p_fake": 0.23998118937015533,
+    "text": "When I picked this series, I couldn't put it down. This is the first book in a series and I can't wait to read the next one. The chemistry between these two is so hot and passionate. I was excited to see what happened next. I received a free copy of this book from NetGalley in exchange",
+    "weights": [
+      [
+        "I",
+        0.23283882378122595
+      ],
+      [
+        "chemistry",
+        -0.16225983479655862
+      ],
+      [
+        "couldn",
+        -0.12994272124697392
+      ],
+      [
+        "NetGalley",
+        -0.12961718797686783
+      ],
+      [
+        "passionate",
+        -0.12161728509916407
+      ],
+      [
+        "exchange",
+        -0.1184683665562581
+      ],
+      [
+        "this",
+        0.060981418280723086
+      ],
+      [
+        "in",
+        0.04972358435434976
+      ],
+      [
+        "a",
+        0.03820990669233969
+      ],
+      [
+        "the",
+        0.03783620452014649
+      ]
+    ]
+  },
+  {
+    "name": "lime_genuine_0",
+    "review_id": "salminen_12646",
+    "true_label": 0,
+    "p_fake": 0.8878790140151978,
+    "text": "This was a wonderful movie about a stalker with a twist, if you like suspense, you will love this movie!",
+    "weights": [
+      [
+        "a",
+        0.3485336664336924
+      ],
+      [
+        "This",
+        0.21560708660185246
+      ],
+      [
+        "movie",
+        0.1282474930751846
+      ],
+      [
+        "you",
+        0.10809497862695852
+      ],
+      [
+        "this",
+        0.08108382760035335
+      ],
+      [
+        "wonderful",
+        -0.06422999172952039
+      ],
+      [
+        "twist",
+        -0.04063273003358319
+      ],
+      [
+        "was",
+        -0.035830022328223056
+      ],
+      [
+        "about",
+        -0.03109904977555142
+      ],
+      [
+        "stalker",
+        -0.022894915361987046
+      ]
+    ]
+  },
+  {
+    "name": "lime_genuine_1",
+    "review_id": "salminen_11121",
+    "true_label": 0,
+    "p_fake": 0.0021042958833277225,
+    "text": "Great product at first, but degrades over time. This product is super easy to install. It's literally plug and play. The speeds it provides is meh. I have a 75MBPS connection but only about 30MBPS gets through on this adapter. Other powerline adapters keep me on much higher speeds. After a few months, the adapter would lose connection for about a minute every so often. As more time went by, it'd get worst and worst eventually leading me to abandon it all together. It wasn't THAT bad, but two or three times a day was more than enough for me to give it up.",
+    "weights": [
+      [
+        "play",
+        -0.15180633576467026
+      ],
+      [
+        "connection",
+        -0.11825734301395904
+      ],
+      [
+        "would",
+        -0.10142649527339447
+      ],
+      [
+        "every",
+        -0.09673957330539872
+      ],
+      [
+        "a",
+        0.06880129860328332
+      ],
+      [
+        "it",
+        0.043919464449339383
+      ],
+      [
+        "me",
+        -0.03429516151730104
+      ],
+      [
+        "to",
+        0.03412414583930144
+      ],
+      [
+        "but",
+        -0.017202955027047006
+      ],
+      [
+        "on",
+        0.013275572251110838
+      ]
+    ]
+  }
+]

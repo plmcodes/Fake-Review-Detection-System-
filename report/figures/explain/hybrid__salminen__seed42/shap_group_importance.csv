@@ -1,0 +1,4 @@
+group,mean_abs_shap
+style,0.6862924292835756
+latent z (AE encoder),0.16787876207443686
+reconstruction error,0.023652903526388817
