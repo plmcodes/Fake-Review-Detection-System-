@@ -1,0 +1,9 @@
+# Optuna best params for hybrid on salminen (20 trials, objective = validation PR-AUC = 0.9357)
+model:
+  ae:
+    latent_dim: 16
+  mlp:
+    dropout: 0.20357458057921213
+train:
+  lr: 0.001172067017209326
+  batch_size: 64
